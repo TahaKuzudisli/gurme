@@ -1,4 +1,4 @@
-package com.app.gurme;
+package com.app.gurme.db;
 
 import com.app.gurme.db.Product;
 import com.app.gurme.repos.ProductRepository;
