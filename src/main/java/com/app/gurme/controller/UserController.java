@@ -6,6 +6,8 @@ import com.app.gurme.exception.ResourceNotFoundException;
 import com.app.gurme.repos.UserRepository;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataIntegrityViolationException;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -32,10 +34,26 @@ public class UserController {
         return ResponseEntity.ok().body(user);
     }
 
+    //Daha sonra eksik veri girilmesi durumunda ve kayıtlı email ile phone number girilmesi durumunda olusan hatalara göre ayrı düzenleme yapilacak
     @PostMapping("/users")
-    public User createUser(@Valid @RequestBody User user) {
-        return userRepository.save(user);
+    public ResponseEntity<?> createUser(@RequestBody User user) {
+        try {
+            User savedUser = userRepository.save(user);
+            return ResponseEntity.ok(savedUser);
+        } catch (DataIntegrityViolationException e) {
+            return ResponseEntity.badRequest().body("Email veya telefon numarası zaten kayıtlı ya da eksik veri girildi :(");
+        }
     }
+    @PostMapping("/users/signin")
+    public ResponseEntity<User> signIn(@RequestBody User loginUser) {
+        User user = userRepository.findByEmailAndPassword(loginUser.getEmail(), loginUser.getPassword());
+        if (user != null) {
+            return ResponseEntity.ok(user);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+    }
+
 
     @PutMapping("/users/{id}")
     public ResponseEntity<User> updateUser(@PathVariable(value = "id") Long userId,

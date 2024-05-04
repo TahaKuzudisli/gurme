@@ -6,6 +6,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.validation.constraints.Email;
 
 @Entity
 public class User {
@@ -19,18 +20,18 @@ public class User {
     @Column(name = "last_name")
     private String last_name;
 
-    @Column(name = "phone_number")
+    @Column(name = "phone_number", unique = true)
     private String phone_number;
 
     @Column(name = "address")
     private String address;
 
-    @Column(name = "email")
+    @Email
+    @Column(name = "email", unique = true)
     private String email;
 
     @Column(name = "password")
     private String password;
-
     public User() {
     }
 
