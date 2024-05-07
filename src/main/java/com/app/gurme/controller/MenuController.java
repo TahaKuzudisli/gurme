@@ -8,6 +8,12 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+import org.springframework.http.MediaType;
 
 import java.util.HashMap;
 import java.util.List;
@@ -20,18 +26,38 @@ public class MenuController {
     @Autowired
     private MenuRepository menuRepository;
 
+    @Autowired
+    private ResourceLoader resourceLoader;
+
     @GetMapping("/menus")
     public List<Menu> getAllMenus() {
         return menuRepository.findAll();
     }
 
     @GetMapping("/menus/{id}")
-    public ResponseEntity<Menu> getMenuById(@PathVariable(value = "id") Integer menuId) throws ResourceNotFoundException {
+    public ResponseEntity<Map<String, Object>> getMenuById(@PathVariable(value = "id") Integer menuId) throws ResourceNotFoundException {
         Menu menu = menuRepository.findById(menuId)
                 .orElseThrow(() -> new ResourceNotFoundException("Menu not found for this id:" + menuId));
-        return ResponseEntity.ok().body(menu);
-    }
 
+        Map<String, Object> response = new HashMap<>();
+        response.put("menu", menu);
+        String imageUrl = ServletUriComponentsBuilder.fromCurrentContextPath()
+                .path("/api/menu-image/")
+                .path(menu.getImage())
+                .toUriString();
+        response.put("imageUrl", imageUrl);
+
+        return ResponseEntity.ok().body(response);
+    }
+    @GetMapping("/menu-image/{imageName}")
+    public ResponseEntity<Resource> getMenuImage(@PathVariable String imageName) {
+        Resource resource = resourceLoader.getResource("classpath:/static/images/" + imageName);
+        if (resource.exists() && resource.isReadable()) {
+            return ResponseEntity.ok().contentType(MediaType.IMAGE_JPEG).body(resource);
+        } else {
+            throw new RuntimeException("Image not found");
+        }
+    }
     @PostMapping("/menus")
     public Menu createMenu(@Valid @RequestBody Menu menu) {
         return menuRepository.save(menu);
@@ -45,6 +71,7 @@ public class MenuController {
 
         menu.setItem_name(menuDetails.getItem_name());
         menu.setPrice(menuDetails.getPrice());
+        menu.setDescription(menuDetails.getDescription());
         menu.setImage(menuDetails.getImage());
         menu.setCategory(menuDetails.getCategory());
 

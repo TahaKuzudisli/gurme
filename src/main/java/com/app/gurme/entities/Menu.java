@@ -1,7 +1,8 @@
 package com.app.gurme.entities;
 
 import jakarta.persistence.*;
-
+import java.util.ArrayList;
+import java.util.List;
 //BİTTİ
 @Entity
 @Table(name = "Menu")
@@ -20,6 +21,9 @@ public class Menu {
     @Column(name = "price")
     private double price;
 
+    @Column(name = "description")
+    private String description;
+
     @Column(name = "image")
     private String image;
 
@@ -31,14 +35,14 @@ public class Menu {
     public Menu() {
     }
 
-    public Menu(Integer restaurantId, String item_name, double price, String image, String category) {
+    public Menu(Integer restaurantId, String item_name, double price, String description, String image, String category, List<String> ingredients) {
         super();
         this.restaurant_id = restaurantId;
         this.item_name = item_name;
         this.price = price;
+        this.description = description;
         this.image = image;
         this.category = category;
-
     }
 
     public Integer getMenu_id() {
@@ -89,6 +93,16 @@ public class Menu {
         this.category = category;
     }
 
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+
+
     @Override
     public String toString() {
         return "Menu{" +
@@ -96,6 +110,7 @@ public class Menu {
                 ", restaurant_id=" + restaurant_id +
                 ", item_name='" + item_name + '\'' +
                 ", price=" + price +
+                ", description='" + description + '\'' +
                 ", image='" + image + '\'' +
                 ", category='" + category + '\'' +
                 '}';
