@@ -26,7 +26,7 @@ public class RestaurantAndMenuController {
     private MenuRepository menuRepository;
 
 
-    @GetMapping("/gurme/{restaurantId}")
+    @GetMapping("/restoranmenu/{restaurantId}")
     public ResponseEntity<RestaurantWithMenus> getRestaurantWithMenus(@PathVariable(value = "restaurantId") Integer restaurantId) throws ResourceNotFoundException {
         Restaurant restaurant = restaurantRepository.findById(restaurantId)
                 .orElseThrow(() -> new ResourceNotFoundException("Restaurant not found with id: " + restaurantId));

@@ -23,12 +23,10 @@ public class GurmeOrder {
     @Column(name = "delivery_person_id")
     private Long delivery_person_id;
 
-    @Column(name = "menu_id")
-    private Long menu_id;
-
+    // User'ın bıraktığı rastgele bir not
     @Column(name = "note")
     private String note;
-
+    // OrderItem'ların price'ları toplanarak bulunacak sayı (Bu mobilde de yapılabilir server tarafında da. Mobil tarafında olsa daha iyi)
     @Column(name = "total_price")
     private double total_price;
 
@@ -36,18 +34,17 @@ public class GurmeOrder {
     @Column(name = "order_situation")
     private String order_situation;
 
-    //saat ve günün tarihini tutacak
+    //sipraiş verildiği zamanki saat ve günün tarihini tutacak
     @Column(name = "order_time")
     private String order_time;
 
     public GurmeOrder() {
     }
 
-    public GurmeOrder(Long restaurant_id, Long user_id, Long delivery_person_id, Long menu_id, String note, double total_price, String order_situation, String order_time) {
+    public GurmeOrder(Long restaurant_id, Long user_id, Long delivery_person_id, String note, double total_price, String order_situation, String order_time) {
         this.restaurant_id = restaurant_id;
         this.user_id = user_id;
         this.delivery_person_id = delivery_person_id;
-        this.menu_id = menu_id;
         this.note = note;
         this.total_price = total_price;
         this.order_situation = order_situation;
@@ -76,14 +73,6 @@ public class GurmeOrder {
 
     public void setUser_id(Long user_id) {
         this.user_id = user_id;
-    }
-
-    public Long getMenu_id() {
-        return menu_id;
-    }
-
-    public void setMenu_id(Long menu_id) {
-        this.menu_id = menu_id;
     }
 
     public String getNote() {
@@ -133,7 +122,6 @@ public class GurmeOrder {
                 ", restaurant_id=" + restaurant_id +
                 ", user_id=" + user_id +
                 ", delivery_person_id=" + delivery_person_id +
-                ", menu_id=" + menu_id +
                 ", note='" + note + '\'' +
                 ", total_price=" + total_price +
                 ", order_situation='" + order_situation + '\'' +
